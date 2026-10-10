@@ -1,0 +1,5 @@
+.DS_Store
+# 補檔位的大檔不進版控（只留清單）
+media/*
+!media/manifest.js
+!media/.gitkeep
