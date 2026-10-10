@@ -440,6 +440,8 @@ lightbox.addEventListener('click', ev => { stop(ev); if (ev.target !== lightbox.
 // ── 保存回顧影片：Web Share（檔案）→ <a download> → 開新頁長按儲存 ──
 let shareFile = null, wantShare = false, fetching = false;
 function canShareFiles() {
+  // 只在手機／平板用分享：Mac 版 Chrome 也支援分享檔案，但會跳出關不掉的空白分享框
+  if (!(navigator.maxTouchPoints > 0 || matchMedia('(pointer: coarse)').matches)) return false;
   try { return !!(navigator.canShare && navigator.share && navigator.canShare({ files: [new File([new Blob(['x'])], 'x.mp4', { type: 'video/mp4' })] })); }
   catch (e) { return false; }
 }
