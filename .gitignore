@@ -1,5 +1,2 @@
 .DS_Store
-# 補檔位的大檔不進版控（只留清單）
-media/*
-!media/manifest.js
-!media/.gitkeep
+# media/ 要進版控：GitHub Pages 直接從 repo 提供影片、動畫、信
