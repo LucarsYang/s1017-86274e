@@ -21,6 +21,18 @@ window.CONTENT = {
     savePreparing: '影片準備中…',
     saveReady: '💾 好了，再點一下保存',
     saveLongPress: '長按影片 → 儲存',
+    bgmOn: '🔊',                                // 右上角配樂開關（開著時）
+    bgmOff: '🔇',                               // 右上角配樂開關（關掉時）
+  },
+
+  // ── 背景配樂（bgm.js 即時合成的原創曲，不用音檔）──
+  // chapters：每章放哪首，順序同下面 scenes（第 0～6 章）。可填：
+  //   'mystery' 神秘（小調、慢）／'playful' 輕快（大調、跳音）／'breezy' 輕快第二首（兜風感）／'warm' 溫暖（慢）／null 不放
+  // 吹蠟燭（麥克風偵測要安靜）和派對（播生日快樂歌）一律不放，不用在這裡設。
+  music: {
+    volume: 0.15,                               // 主音量，0.12～0.18 之間調
+    fade: 1.0,                                  // 換章時交叉淡入淡出秒數
+    chapters: ['mystery', 'playful', 'playful', 'breezy', 'breezy', 'warm', 'warm'],
   },
 
   // 角色
@@ -81,7 +93,7 @@ window.CONTENT = {
         { act:'target', title:'壽星說了算！', text:'Sandy 選擇了：<b>鐵板燒</b>' },
         { w:'dad', e:'happy', t:'鐵板燒！好啊好啊！我馬上找！', s:'lucas/41' },
         { act:'search', query:'板橋　鐵板燒', result:'📍 <b>明水然．樂</b>（板橋重慶）<br>✅ 訂位完成：10/17 晚上 4 位' },
-        { w:'nar', t:'Sandy，妳親手選了自己的生日大餐 😎<br>三次秘密會議，都不如壽星一句話。', s:'sandy/12' },
+        { w:'nar', t:'Sandy，妳親手選了<br>自己的生日大餐 😎<br>三次秘密會議，<br>都不如壽星一句話。', s:'sandy/12' },
       ] },
 
     { anim:'scooter', bg:'bg3-street', loc:'📍 板橋街頭・機車移動會議室', chip:'10/10 早上', noPortrait:true,
@@ -129,14 +141,14 @@ window.CONTENT = {
         { w:'nar', t:'10/17 晚上，明水然．樂。<br>也就是——妳自己選的那間 😎' },
         { w:'cheng', e:'happy', t:'媽媽，這是我做的動畫！', s:'cheng/11' },
         { act:'giftVideo', title:'🎬 丞丞的動畫' },
-        { w:'hua', e:'happy', t:'媽媽，這封信，我要親手交給妳 💌', s:'hua/21' },
+        { w:'hua', e:'happy', t:'媽媽，這封信<br>我要親手交給妳 💌', s:'hua/21' },
         { act:'giftLetter', title:'小花的信', text:'點信封打開' },
         { w:'dad', e:'laugh', t:'妳現在看的這個網站，就是我送妳的禮物。', s:'lucas/10' },
       ] },
 
     { bg:'bg5-mingshuiran', dim:true, loc:'📍 板橋重慶・明水然．樂', chip:'10/17 今晚',
       lines:[
-        { w:'nar', t:'惟詩，謝謝妳總把我們放在心上。<br>這次許願，也記得把自己放進去。' },
+        { w:'nar', t:'惟詩，謝謝妳<br>總把我們放在心上。<br>這次許願，<br>也記得把自己放進去。' },
         { act:'candle', blow:'許個願，對著手機吹一口氣 🌬️', blowSub:'（或按住蛋糕 2 秒）', hold:'許個願，按住蛋糕 2 秒 🎂' },
         { w:'party', name:'老公・丞丞・小花', t:'🎉 Sandy，生日快樂！<br>愛妳的 老公、丞丞、小花' },
       ] },

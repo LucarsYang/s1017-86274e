@@ -292,7 +292,7 @@ def build_script(anim_dur):
             L('hua', 'happy', '我知道了！！帶媽媽去吃大餐！！', chip='10/3 晚上', dur=4.0)]),
         dict(key='ch2', bg='bg2-gulajazz', loc='📍 愛買 3F・古拉爵', chip='10/9 中午', kb=(1.0, 1.12, (.55, .45), (.45, .55)), beats=[
             L('dad', 'surprised', '啊！說好吃大餐……我竟然忘了訂位！', 'lucas/03', dur=4.8),
-            L('nar', None, 'Sandy，妳親手選了自己的生日大餐 😎\n三次秘密會議，都不如壽星一句話。', 'sandy/12', dur=4.6)]),
+            L('nar', None, 'Sandy，妳親手選了自己的生日大餐 😎\n三次秘密會議，\n都不如壽星一句話。', 'sandy/12', dur=4.6)]),
         dict(key='ch3', scooter=True, loc='📍 板橋街頭・機車移動會議室', chip='10/10 早上', beats=[
             L('nar', None, '10/10 早上，三名特務騎機車出動。', dur=3.6),
             dict(L('dad', None, '機車會議開始！每個人都要準備一份禮物給媽媽。', dur=4.6), noPortrait=True)]),
@@ -301,7 +301,7 @@ def build_script(anim_dur):
             L('dad', 'surprised', '馬上去 🏃（網站進度：還是 3%）', 'lucas/16', dur=4.2)]),
         dict(key='ch5', bg='bg5-mingshuiran', loc=LOC_TODAY, chip='10/17 今晚', kb=(1.0, 1.1, (.5, .5), (.42, .45)), beats=ch5),
         dict(key='ch6', bg='bg5-mingshuiran', loc=LOC_TODAY, chip='10/17 今晚', kb=(1.1, 1.0, (.42, .45), (.5, .5)), party=True, beats=[
-            dict(kind='cake', t='惟詩，謝謝妳總把我們放在心上。\n這次許願，也記得把自己放進去。', dur=4.6),
+            dict(kind='cake', t='惟詩，謝謝妳\n總把我們放在心上。\n這次許願，\n也記得把自己放進去。', dur=4.6),
             dict(kind='party', t='🎉 Sandy，生日快樂！\n愛妳的 老公、丞丞、小花', dur=10.4)]),
         dict(key='end', bg='bg5-mingshuiran', kb=(1.0, 1.08, (.5, .5), (.5, .42)), party=True, fade_out=1.8, beats=[
             dict(kind='ending', dur=8.0)]),

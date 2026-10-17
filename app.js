@@ -9,7 +9,7 @@ const COLORS = ['#ff6b8b','#ffd166','#4fc3f7','#81c784','#ba68c8','#ff8a65'];
 const $ = id => document.getElementById(id);
 const app = $('app'), stage = $('stage'), bgLayer = $('bgLayer'), chipEl = $('chip'), locEl = $('loc'),
       skipBtn = $('skip'), fadeEl = $('fade'), startEl = $('start'), saveEl = $('save'), saveLink = $('saveLink'),
-      saveHint = $('saveHint'), lightbox = $('lightbox');
+      saveHint = $('saveHint'), lightbox = $('lightbox'), bgmBtn = $('bgmBtn');
 
 let MEDIA = new Set();
 let ci = 0, li = 0, solved = false, pending = null, busy = false, started = false;
@@ -58,7 +58,40 @@ function unlockAudio() {
     const b = AC.createBuffer(1, 1, 22050), src = AC.createBufferSource();
     src.buffer = b; src.connect(AC.destination); src.start(0);
   } catch (e) { AC = null; }
+  initBgm();
 }
+// ── 背景配樂（bgm.js；每章哪首在 content.js 的 music）──
+let bgm = null, bgmMuted = false;
+const BGM_KEY = 'sandy-bgm-muted';
+try { bgmMuted = localStorage.getItem(BGM_KEY) === '1'; } catch (e) {}
+function initBgm() {
+  if (bgm || !AC || !window.SandyBGM || !CT.music) return;
+  try { bgm = SandyBGM.create(AC, CT.music); bgm.setMuted(bgmMuted); bgm.setHidden(document.hidden); }
+  catch (e) { bgm = null; }
+}
+function musicFor(c, k) {   // 吹蠟燭（麥克風要安靜）與派對（生日快樂歌）不放
+  const l = scenes[c].lines[k];
+  if (!l || l.act === 'candle' || l.w === 'party') return null;
+  return (CT.music && CT.music.chapters && CT.music.chapters[c]) || null;
+}
+function syncBgm(c = ci, k = li) { if (bgm) try { bgm.setMood(musicFor(c, k)); } catch (e) {} }
+function drawBgmBtn() {
+  bgmBtn.textContent = bgmMuted ? UI.bgmOff : UI.bgmOn;
+  bgmBtn.classList.toggle('off', bgmMuted);
+  bgmBtn.setAttribute('aria-label', bgmMuted ? '打開背景音樂' : '關掉背景音樂');
+}
+function toggleBgm(ev) {
+  stop(ev);
+  bgmMuted = !bgmMuted;
+  try { localStorage.setItem(BGM_KEY, bgmMuted ? '1' : '0'); } catch (e) {}
+  drawBgmBtn();
+  if (AC && AC.state !== 'running') try { AC.resume(); } catch (e) {}
+  if (bgm) bgm.setMuted(bgmMuted);
+}
+document.addEventListener('visibilitychange', () => {
+  if (bgm) bgm.setHidden(document.hidden);
+  if (!document.hidden && AC && AC.state !== 'running') try { AC.resume(); } catch (e) {}
+});
 // 生日快樂歌音樂盒（同草稿）
 let songPlaying = false;
 function playSong() {
@@ -272,7 +305,13 @@ const ACTS = {
       : `<div class="gift-box ph">${UI.giftPlaceholder}</div>`;
     stage.innerHTML = `<div class="act gift"><div class="t">${l.title}</div>${body}</div>`;
     const v = stage.querySelector('video');
-    if (v) { v.addEventListener('click', stop); lineCleanups.push(() => { try { v.pause(); } catch (e) {} }); }
+    if (v) {
+      v.addEventListener('click', stop);
+      const duck = on => { if (bgm) bgm.setDucked(on); };   // 影片播放時配樂暫停，暫停／播完再回來
+      v.addEventListener('play', () => duck(true));
+      ['pause', 'ended', 'emptied'].forEach(t => v.addEventListener(t, () => duck(false)));
+      lineCleanups.push(() => { try { v.pause(); } catch (e) {} duck(false); });
+    }
     return {};
   },
   giftLetter(l) {
@@ -342,6 +381,7 @@ const ACTS = {
         let loud = 0;
         const loop = () => {
           if (!alive) return;
+          if (bgm && AC.currentTime < bgm.quietUntil()) { micRaf = requestAnimationFrame(loop); return; }   // 配樂還沒完全靜音前不偵測
           an.getFloatTimeDomainData(buf);
           let sum = 0; for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
           const rms = Math.sqrt(sum / buf.length);
@@ -370,7 +410,8 @@ function render() {
   updateChip(false);
   const isParty = l.w === 'party';
   setParty(isParty);
-  skipBtn.hidden = isParty;
+  skipBtn.hidden = isParty; bgmBtn.hidden = isParty;
+  syncBgm();
   if (l.act) { curAct = ACTS[l.act](l); return; }
   if (l.quiz) { renderQuiz(l); return; }
   if (isParty) {
@@ -396,6 +437,7 @@ function next() {
 function goChapter(i) {
   busy = true; cleanupLine();
   fadeEl.classList.add('on');
+  syncBgm(i, 0);
   setTimeout(() => {
     ci = i; li = 0;
     stage.innerHTML = '';
@@ -410,6 +452,7 @@ function goChapter(i) {
 }
 function onTap() {
   if (busy || !started) return;
+  if (AC && AC.state !== 'running') try { AC.resume(); } catch (e) {}   // iOS 來電等中斷後恢復
   const l = scenes[ci].lines[li];
   if (l.w === 'party') { playSong(); return; }      // 結尾：點一下再唱一次
   if (pending) { pending(); return; }                 // 互動卡第一下＝觸發效果
@@ -506,14 +549,15 @@ function start() {
 function init() {
   MEDIA = new Set(Array.isArray(window.MEDIA_FILES) ? window.MEDIA_FILES : []);
   $('startGo').textContent = UI.start; $('startSub').textContent = UI.startSub;
-  $('rotate').textContent = UI.rotate; skipBtn.textContent = UI.skip;
+  $('rotate').textContent = UI.rotate; skipBtn.textContent = UI.skip; drawBgmBtn();
   setBackground(scenes[0]); chipEl.style.display = 'none'; locEl.style.display = 'none';
   app.addEventListener('click', () => { if (!started) start(); else onTap(); });
   app.addEventListener('contextmenu', ev => ev.preventDefault());
   skipBtn.addEventListener('click', skip);
+  bgmBtn.addEventListener('click', toggleBgm);
   // 測試用掛鉤（不影響播放）
   window.__sandy = { get ci() { return ci; }, get li() { return li; }, get solved() { return solved; }, get busy() { return busy; },
-    line: () => scenes[ci].lines[li], media: () => [...MEDIA] };
+    line: () => scenes[ci].lines[li], media: () => [...MEDIA], bgm: () => bgm && bgm.state() };
 }
 // media/manifest.js 由 tools/update_media.py 產生（列出 media/ 裡實際有的檔）；加時間戳避免快取到舊清單
 const sc = document.createElement('script');

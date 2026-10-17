@@ -44,11 +44,15 @@ img { -webkit-user-drag:none; -webkit-touch-callout:none; }
 @keyframes slideIn { from { opacity:0; transform:translateX(-120%); } to { opacity:1; transform:none; } }
 .stage { position:absolute; inset:0; z-index:5; }
 
-/* 跳過 */
-#skip { position:absolute; top:calc(var(--sat) + 18 * var(--u)); right:calc(14 * var(--u)); z-index:30; border:0; cursor:pointer;
+/* 右上角：配樂開關＋跳過 */
+.topbar { position:absolute; top:calc(var(--sat) + 18 * var(--u)); right:calc(14 * var(--u)); z-index:30;
+  display:flex; align-items:stretch; gap:calc(6 * var(--u)); }
+#skip, #bgmBtn { border:0; cursor:pointer; white-space:nowrap;
   font:inherit; font-size:calc(11 * var(--u)); padding:calc(4 * var(--u)) calc(10 * var(--u)); border-radius:calc(12 * var(--u));
   background:rgba(30,20,20,.45); color:rgba(255,255,255,.85); }
-#skip[hidden] { display:none; }
+#bgmBtn { padding:calc(4 * var(--u)) calc(7 * var(--u)); line-height:1; }
+#bgmBtn.off { opacity:.75; }
+#skip[hidden], #bgmBtn[hidden] { display:none; }
 
 /* 角色立繪 */
 .portrait { position:absolute; bottom:calc(var(--sab) + 136 * var(--u)); height:calc(var(--h, 184) * var(--u));

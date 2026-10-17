@@ -40,7 +40,10 @@ LAYOUT_JS = r"""
   const dlgs = [...document.querySelectorAll('#stage .dlg')].filter(vis);
   const btns = [...document.querySelectorAll('#stage .opt, #stage .pad button, #stage .cake, #stage video, #stage .env, #stage .letters img, #stage .bulb')].filter(vis);
   for (const d of dlgs) for (const b of btns) if (inter(r(d), r(b))) issues.push('對話框蓋到互動元件 ' + b.className + ' ' + (b.textContent||'').slice(0,12));
-  const sel = '#stage .dlg, #stage .act, .chip, .loc, #skip, #save a, .hb, .flags, .polaroid';
+  const sel = '#stage .dlg, #stage .act, .chip, .loc, #skip, #bgmBtn, #save a, .hb, .flags, .polaroid';
+  const chip = document.querySelector('.chip'), top = [...document.querySelectorAll('#skip, #bgmBtn')].filter(vis);
+  if (chip && vis(chip)) for (const b of top) if (inter(r(chip), r(b))) issues.push('日期標籤和右上角按鈕重疊 ' + b.id);
+  if (top.length === 2 && inter(r(top[0]), r(top[1]))) issues.push('配樂鈕和跳過重疊');
   for (const el of document.querySelectorAll(sel)) {
     if (!vis(el)) continue;
     const b = r(el);
@@ -162,6 +165,7 @@ def main(p):
         else:
             entry["type"] = l["w"]; entry["ok"] = norm(l["t"]) in norm(text)
             if l.get("s"): entry["sticker"] = page.locator("#stage img.react").count() == 1
+        entry["bgm"] = page.evaluate("() => { const b = __sandy.bgm && __sandy.bgm(); return b && {mood: b.mood, playing: b.playing}; }")
         if li == 0 and want_shot(ci): shot(f"{label}-first")
         if "act" not in l: layout(label)
 
@@ -220,6 +224,8 @@ def main(p):
             time.sleep(0.8)
             entry["mode_text"] = page.inner_text("#stage .act .main")
             entry["mic_text"] = page.inner_text("#stage .act .mic")
+            time.sleep(0.6)
+            res["checks"]["bgm_at_candle"] = page.evaluate("() => __sandy.bgm && __sandy.bgm()")
             layout(label)
             if want_shot(ci): shot(f"{label}-candle")
             b = page.locator("#stage .cake").bounding_box()
