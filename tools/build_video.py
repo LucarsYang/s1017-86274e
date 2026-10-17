@@ -279,10 +279,10 @@ def L(who, e, t, s=None, chip=None, dur=4.4):
 def build_script(anim_dur):
     ch5 = ([L('cheng', 'happy', '媽媽，這是我做的動畫！', 'cheng/11', dur=3.4),
             dict(kind='anim', dur=anim_dur, chip=None),
-            L('dad', 'laugh', '妳現在看的這個網站，就是我的禮物。', 'lucas/10', dur=4.6)]
+            L('dad', 'laugh', '妳現在看的這個網站，就是我送妳的禮物。', 'lucas/10', dur=4.6)]
            if anim_dur else
            [L('nar', None, '10/17 晚上，明水然．樂。\n也就是——妳自己選的那間 😎', dur=4.2),
-            L('dad', 'laugh', '妳現在看的這個網站，就是我的禮物。', 'lucas/10', dur=4.6)])
+            L('dad', 'laugh', '妳現在看的這個網站，就是我送妳的禮物。', 'lucas/10', dur=4.6)])
     return [
         dict(key='open', bg='bg0-mystery', loc='📍 ？？？・機密檔案室', kb=(1.0, 1.12, (.5, .42), (.5, .55)), beats=[
             dict(kind='title', t='TOP SECRET\nSandy 生日作戰檔案', dur=3.6),
@@ -291,8 +291,8 @@ def build_script(anim_dur):
             L('cheng', 'thinking', '媽媽生日快到了，要送什麼？', chip='9/17 晚上', dur=4.0),
             L('hua', 'happy', '我知道了！！帶媽媽去吃大餐！！', chip='10/3 晚上', dur=4.0)]),
         dict(key='ch2', bg='bg2-gulajazz', loc='📍 愛買 3F・古拉爵', chip='10/9 中午', kb=(1.0, 1.12, (.55, .45), (.45, .55)), beats=[
-            L('dad', 'surprised', '啊！！糟糕！說好要吃大餐……我、我忘記訂餐廳了！！', 'lucas/03', dur=4.8),
-            L('nar', None, 'Sandy，妳親手選了自己的生日大餐，\n而且完全沒發現 😎', 'sandy/12', dur=4.6)]),
+            L('dad', 'surprised', '啊！說好吃大餐……我竟然忘了訂位！', 'lucas/03', dur=4.8),
+            L('nar', None, 'Sandy，妳親手選了自己的生日大餐 😎\n三次秘密會議，都不如壽星一句話。', 'sandy/12', dur=4.6)]),
         dict(key='ch3', scooter=True, loc='📍 板橋街頭・機車移動會議室', chip='10/10 早上', beats=[
             L('nar', None, '10/10 早上，三名特務騎機車出動。', dur=3.6),
             dict(L('dad', None, '機車會議開始！每個人都要準備一份禮物給媽媽。', dur=4.6), noPortrait=True)]),
@@ -301,7 +301,7 @@ def build_script(anim_dur):
             L('dad', 'surprised', '馬上去 🏃（網站進度：還是 3%）', 'lucas/16', dur=4.2)]),
         dict(key='ch5', bg='bg5-mingshuiran', loc=LOC_TODAY, chip='10/17 今晚', kb=(1.0, 1.1, (.5, .5), (.42, .45)), beats=ch5),
         dict(key='ch6', bg='bg5-mingshuiran', loc=LOC_TODAY, chip='10/17 今晚', kb=(1.1, 1.0, (.42, .45), (.5, .5)), party=True, beats=[
-            dict(kind='cake', t='最後一個任務，要由 Sandy 親自完成——', dur=3.4),
+            dict(kind='cake', t='惟詩，謝謝妳總把我們放在心上。\n這次許願，也記得把自己放進去。', dur=4.6),
             dict(kind='party', t='🎉 Sandy，生日快樂！\n愛妳的 老公、丞丞、小花', dur=10.4)]),
         dict(key='end', bg='bg5-mingshuiran', kb=(1.0, 1.08, (.5, .5), (.5, .42)), party=True, fade_out=1.8, beats=[
             dict(kind='ending', dur=8.0)]),
